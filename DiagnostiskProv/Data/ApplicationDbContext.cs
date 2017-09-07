@@ -17,8 +17,8 @@ namespace DiagnostiskProv.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Product>()
-                .HasKey(di => new { di.ProductId, di.CategoryId });
+            //builder.Entity<Product>()
+            //    .HasKey(di => new { di.ProductId, di.CategoryId });
 
             base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.

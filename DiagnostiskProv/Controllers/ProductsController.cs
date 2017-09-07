@@ -9,6 +9,7 @@ using DiagnostiskProv.Data;
 using DiagnostiskProv.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using DiagnostiskProv.Services;
 
 namespace DiagnostiskProv.Controllers
 {
@@ -17,12 +18,14 @@ namespace DiagnostiskProv.Controllers
         private readonly ApplicationDbContext _context;
         private IHostingEnvironment _env;
         private readonly ILogger<ProductsController> _logger;
+        private readonly CategoryService _categoryService;
 
-        public ProductsController(ApplicationDbContext context, IHostingEnvironment env, ILogger<ProductsController> logger)
+        public ProductsController(ApplicationDbContext context, IHostingEnvironment env, ILogger<ProductsController> logger, CategoryService categoryService)
         {
             _context = context;
             _env = env;
             _logger = logger;
+            _categoryService = categoryService;
         }
 
         // GET: Products
@@ -53,9 +56,9 @@ namespace DiagnostiskProv.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create(int? id, Product product)
+        public IActionResult Create(Product product)
         {
-            ViewData["categoryList"] = new SelectList(_context.Category, "CategoryId", "Name", product.CategoryId);
+            ViewData["categoryList"] = _categoryService.GetSelectList(product);
 
             return View();
         }
@@ -65,7 +68,7 @@ namespace DiagnostiskProv.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,CategoryId")] Product product)
+        public async Task<IActionResult> Create(int? id, [Bind("ProductId,Name,Price,CategoryId")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +89,7 @@ namespace DiagnostiskProv.Controllers
 
             var product = await _context.Products.SingleOrDefaultAsync(m => m.ProductId == id);
 
-            ViewData["categoryList"] = new SelectList(_context.Category, "CategoryId", "Name", product.CategoryId);
+            ViewData["categoryList"] = _categoryService.GetSelectList(product);
 
             if (product == null)
             {
@@ -100,7 +103,7 @@ namespace DiagnostiskProv.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,CategoryId")] Product product)
         {
             if (id != product.ProductId)
             {

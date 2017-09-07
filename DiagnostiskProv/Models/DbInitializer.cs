@@ -20,8 +20,8 @@ namespace DiagnostiskProv.Models
 
                 var tvPhilips = new Product { Name = "Philips", Price = 999, Category = tv };
                 var dvdSamsung = new Product { Name = "Samsung", Price = 999, Category = dvd };
-
-                context.AddRange(tvPhilips, dvdSamsung, tv, dvd, vhs);
+                context.AddRange(tvPhilips, dvdSamsung);
+                context.AddRange(tv, dvd, vhs);
                 context.SaveChanges();
             }
         }
