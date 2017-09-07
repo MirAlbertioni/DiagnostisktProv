@@ -1,4 +1,6 @@
 ﻿using DiagnostiskProv.Data;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +10,7 @@ namespace DiagnostiskProv.Models
 {
     public static class DbInitializer
     {
-        public static void Initializer(ApplicationDbContext context)
+        public static void Initializer(ApplicationDbContext context, IHostingEnvironment env, IApplicationBuilder app)
         {
             if(context.Products.ToList().Count == 0)
             {

@@ -16,8 +16,12 @@ namespace DiagnostiskProv
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+            builder.AddEnvironmentVariables();
             Configuration = configuration;
         }
 
@@ -66,7 +70,7 @@ namespace DiagnostiskProv
                     name: "default",
                     template: "{controller=Products}/{action=Index}/{id?}");
             });
-            DbInitializer.Initializer(context);
+            DbInitializer.Initializer(context, env, app);
         }
     }
 }
