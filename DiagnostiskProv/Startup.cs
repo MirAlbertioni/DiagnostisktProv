@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DiagnostiskProv.Data;
 using DiagnostiskProv.Models;
 using DiagnostiskProv.Services;
+using Microsoft.Extensions.Logging;
 
 namespace DiagnostiskProv
 {
@@ -47,7 +48,7 @@ namespace DiagnostiskProv
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -60,6 +61,7 @@ namespace DiagnostiskProv
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            loggerFactory.AddFile("Logs/myapp-{Date}.txt");
             app.UseStaticFiles();
 
             app.UseAuthentication();

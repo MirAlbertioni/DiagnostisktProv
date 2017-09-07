@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DiagnostiskProv.Data;
 using DiagnostiskProv.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DiagnostiskProv.Controllers
 {
@@ -15,16 +16,19 @@ namespace DiagnostiskProv.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IHostingEnvironment _env;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(ApplicationDbContext context, IHostingEnvironment env)
+        public ProductsController(ApplicationDbContext context, IHostingEnvironment env, ILogger<ProductsController> logger)
         {
             _context = context;
             _env = env;
+            _logger = logger;
         }
 
         // GET: Products
         public IActionResult Index()
         {
+            _logger.LogWarning("With great powers comes great responsibilities");
             var products = _context.Products.ToList();
             var categories = _context.Category.ToList();
             return View("Index", products);
