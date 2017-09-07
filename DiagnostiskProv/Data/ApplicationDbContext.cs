@@ -24,6 +24,7 @@ namespace DiagnostiskProv.Data
         }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductCategory> Category { get; set; }
 
     }
 }
