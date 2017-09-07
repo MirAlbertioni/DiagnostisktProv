@@ -12,9 +12,14 @@ namespace DiagnostiskProv.Models
         {
             if(context.Products.ToList().Count == 0)
             {
-                var tv = new ProductCategory { Name = "TV" };
-                var dvd = new ProductCategory { Name = "DVD" };
-                var vhs = new ProductCategory { Name = "VHS" };
+                var tv = new Category { Name = "TV" };
+                var dvd = new Category { Name = "DVD" };
+                var vhs = new Category { Name = "VHS" };
+
+                var tvPhilips = new Product { Name = "Philips", Price = 999, Category = tv };
+
+                context.AddRange(tvPhilips, tv, dvd, vhs);
+                context.SaveChanges();
             }
         }
     }

@@ -20,9 +20,11 @@ namespace DiagnostiskProv.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Products.ToListAsync());
+            var products = _context.Products.ToList();
+            var categories = _context.Category.ToList();
+            return View("Index", products);
         }
 
         // GET: Products/Details/5
@@ -34,7 +36,7 @@ namespace DiagnostiskProv.Controllers
             }
 
             var product = await _context.Products
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
                 return NotFound();
@@ -44,8 +46,10 @@ namespace DiagnostiskProv.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id, Product product)
         {
+            ViewData["categoryList"] = new SelectList(_context.Category, "CategoryId", "Name", product.CategoryId);
+
             return View();
         }
 
@@ -54,7 +58,7 @@ namespace DiagnostiskProv.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,CategoryId")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +77,10 @@ namespace DiagnostiskProv.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.SingleOrDefaultAsync(m => m.Id == id);
+            var product = await _context.Products.SingleOrDefaultAsync(m => m.ProductId == id);
+
+            ViewData["categoryList"] = new SelectList(_context.Category, "CategoryId", "Name", product.CategoryId);
+
             if (product == null)
             {
                 return NotFound();
@@ -88,7 +95,7 @@ namespace DiagnostiskProv.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price")] Product product)
         {
-            if (id != product.Id)
+            if (id != product.ProductId)
             {
                 return NotFound();
             }
@@ -102,7 +109,7 @@ namespace DiagnostiskProv.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!ProductExists(product.ProductId))
                     {
                         return NotFound();
                     }
@@ -125,7 +132,7 @@ namespace DiagnostiskProv.Controllers
             }
 
             var product = await _context.Products
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
                 return NotFound();
@@ -139,7 +146,7 @@ namespace DiagnostiskProv.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.SingleOrDefaultAsync(m => m.Id == id);
+            var product = await _context.Products.SingleOrDefaultAsync(m => m.ProductId == id);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -147,7 +154,7 @@ namespace DiagnostiskProv.Controllers
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _context.Products.Any(e => e.ProductId == id);
         }
     }
 }
