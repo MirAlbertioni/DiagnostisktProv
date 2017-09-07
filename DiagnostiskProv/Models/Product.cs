@@ -13,5 +13,6 @@ namespace DiagnostiskProv.Models
         public string Name { get; set; }
         [Range(minimum: 5, maximum: 1000, ErrorMessage = "Must be between 5 and 1000")]
         public decimal Price { get; set; }
+        public ProductCategory Category { get; set; }
     }
 }
